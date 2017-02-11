@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import com.subhrajyoti.redditnews.commons.RedditNewsItem
 import java.util.*
 
-class NewsAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class NewsAdapter(listener: NewsDelegateAdapter.onViewSelectedListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var items = ArrayList<ViewType>()
     private var delegateAdapters = SparseArrayCompat<ViewTypeDelegateAdapter>()
@@ -16,7 +16,7 @@ class NewsAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     init {
         delegateAdapters.put(AdapterConstants.LOADING, LoadingDelegateAdapter())
-        delegateAdapters.put(AdapterConstants.NEWS, NewsDelegateAdapter())
+        delegateAdapters.put(AdapterConstants.NEWS, NewsDelegateAdapter(listener))
         items.add(loadingItem)
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

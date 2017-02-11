@@ -10,7 +10,11 @@ import com.subhrajyoti.redditnews.commons.extensions.inflate
 import com.subhrajyoti.redditnews.commons.extensions.loadImg
 import kotlinx.android.synthetic.main.news_item.view.*
 
-class NewsDelegateAdapter : ViewTypeDelegateAdapter {
+class NewsDelegateAdapter(val viewActions: onViewSelectedListener) : ViewTypeDelegateAdapter {
+
+    interface onViewSelectedListener {
+        fun onItemSelected(url: String?)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
         return NewsViewHolder(parent)
@@ -21,7 +25,7 @@ class NewsDelegateAdapter : ViewTypeDelegateAdapter {
         holder.bind(item as RedditNewsItem)
     }
 
-    class NewsViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
+    inner class NewsViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
             parent.inflate(R.layout.news_item)) {
 
         fun bind(item: RedditNewsItem) = with(itemView) {
@@ -30,6 +34,7 @@ class NewsDelegateAdapter : ViewTypeDelegateAdapter {
             author.text = item.author
             comments.text = "${item.numComments} comments"
             time.text = item.created.getFriendlyTime()
+            super.itemView.setOnClickListener { viewActions.onItemSelected(item.url)}
         }
     }
 }

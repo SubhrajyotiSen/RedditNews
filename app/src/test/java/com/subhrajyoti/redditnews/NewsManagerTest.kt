@@ -56,7 +56,7 @@ class NewsManagerTest {
                 10,
                 Date().time,
                 "thumbnail",
-                "url"
+                "permalink"
         )
         val newsResponse = RedditChildrenResponse(newsData)
         val redditNewsResponse = RedditNewsResponse(RedditDataResponse(listOf(newsResponse), null, null))

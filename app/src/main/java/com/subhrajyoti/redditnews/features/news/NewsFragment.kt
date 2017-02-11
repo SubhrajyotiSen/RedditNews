@@ -1,5 +1,7 @@
 package com.subhrajyoti.redditnews.features.news
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.LinearLayoutManager
@@ -11,6 +13,7 @@ import com.subhrajyoti.redditnews.R
 import com.subhrajyoti.redditnews.commons.InfiniteScrollListener
 import com.subhrajyoti.redditnews.commons.RedditNews
 import com.subhrajyoti.redditnews.commons.adapter.NewsAdapter
+import com.subhrajyoti.redditnews.commons.adapter.NewsDelegateAdapter
 import com.subhrajyoti.redditnews.commons.extensions.inflate
 import kotlinx.android.synthetic.main.fragment_news.*
 import rx.android.schedulers.AndroidSchedulers
@@ -18,7 +21,16 @@ import rx.schedulers.Schedulers
 import javax.inject.Inject
 
 
-class NewsFragment : RxBaseFragment() {
+class NewsFragment : RxBaseFragment(), NewsDelegateAdapter.onViewSelectedListener {
+    override fun onItemSelected(url: String?) {
+        if (url.isNullOrEmpty()) {
+            Snackbar.make(news_list, "No URL assigned to this news", Snackbar.LENGTH_LONG).show()
+        } else {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse("https://www.reddit.com"+url)
+            startActivity(intent)
+        }
+    }
 
     private var redditNews : RedditNews? = null
 
@@ -29,9 +41,9 @@ class NewsFragment : RxBaseFragment() {
     @Inject lateinit var newsManager: NewsManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
-                super.onCreate(savedInstanceState)
-                MyApp.newsComponent.inject(this)
-            }
+        super.onCreate(savedInstanceState)
+        MyApp.newsComponent.inject(this)
+    }
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return container?.inflate(R.layout.fragment_news)
@@ -60,13 +72,13 @@ class NewsFragment : RxBaseFragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         val news = (news_list.adapter as NewsAdapter).getNews()
-        if (redditNews != null && news.size > 0) {
+        if (redditNews != null && news.isNotEmpty()) {
             outState.putParcelable(KEY_REDDIT_NEWS, redditNews?.copy(news = news))
         }
     }
 
     private fun initAdapter() {
-        news_list?.adapter = NewsAdapter()
+        news_list?.adapter = NewsAdapter(this)
     }
 
     private fun requestNews() {

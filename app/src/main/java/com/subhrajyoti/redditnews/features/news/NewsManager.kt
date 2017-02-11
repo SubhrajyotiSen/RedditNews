@@ -21,7 +21,7 @@ class NewsManager @Inject constructor(private val apiNews: NewsAPI) {
                 val news = dataResponse.children.map {
                     val item = it.data
                     RedditNewsItem(item.author, item.title, item.num_comments,
-                            item.created, item.thumbnail, item.url)
+                            item.created, item.thumbnail, item.permalink)
                 }
                 val redditNews = RedditNews(
                         dataResponse.after ?: "",
