@@ -1,16 +1,17 @@
 package com.subhrajyoti.redditnews.features.news
 
-import com.subhrajyoti.redditnews.api.RestAPI
+import com.subhrajyoti.redditnews.api.NewsAPI
+import com.subhrajyoti.redditnews.api.NewsRestAPI
 import com.subhrajyoti.redditnews.commons.RedditNews
 import com.subhrajyoti.redditnews.commons.RedditNewsItem
 import rx.Observable
 
-class NewsManager(private val api: RestAPI = RestAPI()) {
+class NewsManager(private val apiNews: NewsAPI = NewsRestAPI()) {
 
     fun getNews(after: String, limit: String = "10"): Observable<RedditNews> {
         return Observable.create {
             subscriber ->
-            val callResponse = api.getNews(after, limit)
+            val callResponse = apiNews.getNews(after, limit)
             val response = callResponse.execute()
 
             if (response.isSuccessful) {
