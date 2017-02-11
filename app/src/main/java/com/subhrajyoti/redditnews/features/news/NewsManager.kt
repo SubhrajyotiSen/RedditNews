@@ -1,12 +1,14 @@
 package com.subhrajyoti.redditnews.features.news
 
 import com.subhrajyoti.redditnews.api.NewsAPI
-import com.subhrajyoti.redditnews.api.NewsRestAPI
 import com.subhrajyoti.redditnews.commons.RedditNews
 import com.subhrajyoti.redditnews.commons.RedditNewsItem
 import rx.Observable
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class NewsManager(private val apiNews: NewsAPI = NewsRestAPI()) {
+@Singleton
+class NewsManager @Inject constructor(private val apiNews: NewsAPI) {
 
     fun getNews(after: String, limit: String = "10"): Observable<RedditNews> {
         return Observable.create {

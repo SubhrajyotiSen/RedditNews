@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.subhrajyoti.redditnews.MyApp
 import com.subhrajyoti.redditnews.R
 import com.subhrajyoti.redditnews.commons.InfiniteScrollListener
 import com.subhrajyoti.redditnews.commons.RedditNews
@@ -14,6 +15,7 @@ import com.subhrajyoti.redditnews.commons.extensions.inflate
 import kotlinx.android.synthetic.main.fragment_news.*
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
+import javax.inject.Inject
 
 
 class NewsFragment : RxBaseFragment() {
@@ -24,9 +26,12 @@ class NewsFragment : RxBaseFragment() {
         private val KEY_REDDIT_NEWS = "redditNews"
     }
 
-    private val newsManager by lazy {
-        NewsManager()
-    }
+    @Inject lateinit var newsManager: NewsManager
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+                super.onCreate(savedInstanceState)
+                MyApp.newsComponent.inject(this)
+            }
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return container?.inflate(R.layout.fragment_news)
